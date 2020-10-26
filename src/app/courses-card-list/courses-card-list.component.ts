@@ -3,11 +3,13 @@ import { Course } from "../model/course";
 import { MatDialogConfig, MatDialog } from "@angular/material/dialog";
 import { CourseDialogComponent } from "../course-dialog/course-dialog.component";
 import { filter, tap } from "rxjs/operators";
+import { ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "courses-card-list",
   templateUrl: "./courses-card-list.component.html",
   styleUrls: ["./courses-card-list.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoursesCardListComponent implements OnInit {
   @Input() courses: Course[] = [];
