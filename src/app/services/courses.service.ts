@@ -9,9 +9,10 @@ export class CoursesService {
   constructor(private http: HttpClient) {}
 
   loadAllCourses(): Observable<Course[]> {
-    return this.http
-      .get<Course[]>("/api/courses")
-      .pipe(map((res) => res["payload"]));
+    return this.http.get<Course[]>("/api/courses").pipe(
+      map((res) => res["payload"]),
+      shareReplay()
+    );
   }
 
   saveCourse(courseId: string, changes: Partial<Course>): Observable<any> {

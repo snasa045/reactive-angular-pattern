@@ -16,6 +16,9 @@ import { HttpClient } from "@angular/common/http";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { CourseDialogComponent } from "../course-dialog/course-dialog.component";
 import { CoursesService } from "../services/courses.service";
+import { LoadingService } from "app/loading/loading.service";
+import { MessagesService } from "../messages/messages.service";
+import { CoursesStore } from "../services/courses.store";
 
 @Component({
   selector: "home",
@@ -27,29 +30,15 @@ export class HomeComponent implements OnInit {
 
   advancedCourses$: Observable<Course[]>;
 
-  constructor(private coursesService: CoursesService) {}
+  constructor(private coursesStore: CoursesStore) {}
 
   ngOnInit() {
     this.reloadCourses();
   }
 
   reloadCourses() {
-    const course$ = this.coursesService.loadAllCourses().pipe(
-      tap((res) => console.log(res)),
-      map((courses) => courses.sort(sortCoursesBySeqNo)),
-      shareReplay()
-    );
+    this.beginnerCourses$ = this.coursesStore.filterByCategory("BEGINNER");
 
-    this.beginnerCourses$ = course$.pipe(
-      map((courses) =>
-        courses.filter((course) => course.category === "BEGINNER")
-      )
-    );
-
-    this.advancedCourses$ = course$.pipe(
-      map((courses) =>
-        courses.filter((course) => course.category === "ADVANCED")
-      )
-    );
+    this.advancedCourses$ = this.coursesStore.filterByCategory("ADVANCED");
   }
 }
